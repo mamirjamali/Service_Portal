@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  user:
+    build:
+      context: ./user
+      args:
+        - DEV=true
+    ports:
+      - 8000:8000
+    networks:
+      - micro_service
+
+networks:
+  micro_service:
+    external:
+      name: micro_service
