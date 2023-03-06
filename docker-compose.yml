@@ -7,7 +7,7 @@ services:
         - DEV=true
     restart: always
     ports:
-      -  8000:8000
+      - 8000:8000
     volumes:
       - ./user:/user
     command: >
@@ -21,6 +21,8 @@ services:
       - SECRET_KEY=${DJANGO_SECRET_KEY}
       - ALLOWED_HOST=${DJANGO_ALLOWED_HOST}
       - DEBUG=1
+    networks:
+      - micro_service
     depends_on:
       user_db:
         condition: service_healthy
@@ -42,6 +44,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - micro_service
 
 volumes:
   postgres_data_dev:
+
+networks:
+  micro_service:
+    name: micro_service
