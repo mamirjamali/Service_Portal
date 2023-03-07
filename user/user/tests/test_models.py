@@ -5,9 +5,9 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 
-def create_user(email="test@example.com", password="testpass"):
+def create_user(email='test@example.com', password='testpass', username='testusername'):
     """Handler function to create user"""
-    return get_user_model().objects.create_user(email, password)
+    return get_user_model().objects.create_user(email, password, username)
 
 
 class ModelsTests(TestCase):
@@ -17,9 +17,12 @@ class ModelsTests(TestCase):
         """Test creating user with email by using default user model."""
         email = 'test@example.com'
         password = 'testpassword'
+        username = 'testusername'
+
         user = get_user_model().objects.create_user(
             email=email,
-            password=password
+            password=password,
+            username=username
         )
 
         self.assertEqual(user.email, email)
@@ -33,14 +36,16 @@ class ModelsTests(TestCase):
             ['TEST3@EXAMPLE.COM', 'TEST3@example.com'],
             ['test4@example.COM', 'test4@example.com'],
         ]
-        i = 0
+
+        i = 1
         for email, expected in sample_emails:
             i += 1
             user = get_user_model().objects.create_user(
-                email,
+                email=email,
                 password='testpass',
-                username=f'testuser{i}'
+                username=f'testusername{i}'
             )
+
             self.assertEqual(user.email, expected)
 
     def test_user_empty_email_raises_error(self):
@@ -48,11 +53,21 @@ class ModelsTests(TestCase):
         with self.assertRaises(ValueError):
             get_user_model().objects.create_user('', 'testpass')
 
+    def test_user_empty_username_raises_error(self):
+        """Test if user not provide a username it will raises ValueError"""
+        with self.assertRaises(ValueError):
+            get_user_model().objects.create_user(
+                email='test@example.com',
+                password='testpass',
+                username=''
+            )
+
     def test_create_super_user(self):
         """Test create superuser."""
         user = get_user_model().objects.create_superuser(
-            email="superuser@example.com",
-            password="testsuperuser"
+            email='superuser@example.com',
+            password='testsuperuser',
+            username='testusername'
         )
 
         self.assertTrue(user.is_superuser)
