@@ -5,7 +5,9 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 
-def create_user(email='test@example.com', password='testpass', username='testusername'):
+def create_user(email='test@example.com',
+                password='testpass',
+                username='testusername'):
     """Handler function to create user"""
     return get_user_model().objects.create_user(email, password, username)
 
